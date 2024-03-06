@@ -32,6 +32,21 @@ export class UserService {
     return { message: "User created successfully", user };
     }
 
+    async login(email: string, password: string) {
+        const user = await this.usersRepository.findOne({ where: { email } });
+
+        if (!user) {
+            throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+        }
+
+        if (user.password !== password) {
+            throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+        }
+
+        const { password: _, ...userData } = user;
+        return userData;
+    }
+
     async getUsers(params: ManageUserDto) {
         const users = this.usersRepository
           .createQueryBuilder('user')

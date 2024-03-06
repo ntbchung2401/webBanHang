@@ -8,11 +8,14 @@ import {
   Query,
   Get,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterDto } from './dto/register.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { ManageUserDto } from './dto/manageUser.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('user')
 export class UserController {
@@ -23,7 +26,6 @@ export class UserController {
     const result = await this.userService.create(registerDto);
     return { result, message: 'Successfully create new employee' };
   }
-
   @Get()
   findAll(@Query() params: ManageUserDto) {
     return this.userService.getUsers(params);
@@ -32,7 +34,21 @@ export class UserController {
   async findOne(@Param('id') id: string) {
     return this.userService.getUserById(id);
   }
-
+  @Post('login')
+  async login(@Body(new ValidationPipe()) loginDto: LoginDto) {
+    try {
+      const userData = await this.userService.login(
+        loginDto.email,
+        loginDto.password,
+      );
+      return { message: 'Login successful', userData };
+    } catch (error) {
+      throw new HttpException(
+        'Login failed. Invalid credentials.',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+  }
   @Patch(':id')
   async update(
     @Param('id') id: string,
