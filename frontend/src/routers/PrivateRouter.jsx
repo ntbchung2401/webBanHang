@@ -1,4 +1,4 @@
-import Register from "../screens/register/Register";
+import Homepage from "../screens/home/Homepage";
 
 
 const routes = [
@@ -6,7 +6,7 @@ const routes = [
     children: [
       {
         path: "/",
-        element: <Register />,
+        element: <Homepage />,
       },
       {
         path: "404",

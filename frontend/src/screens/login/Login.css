@@ -64,3 +64,6 @@
     display: block;
     width: 100%;
   }
+  .form-title {
+    text-align: center;
+  }
