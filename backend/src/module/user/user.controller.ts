@@ -41,7 +41,7 @@ export class UserController {
         loginDto.email,
         loginDto.password,
       );
-      return { message: 'Login successful', userData };
+      return { userData };
     } catch (error) {
       throw new HttpException(
         'Login failed. Invalid credentials.',
