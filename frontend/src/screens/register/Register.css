@@ -16,14 +16,14 @@
   .welcome {
     font-style: italic;
   }
-  #login-form {
+  #registerUser {
     width: 100%;
     padding-top: 70px;
     padding-right: 70px;
     padding-bottom: 70px;
     padding-left: 70px;
   }
-  #login-form p.form-title {
+  #registerUser p.form-title {
     color: #333333;
     font-family: "Josefin Sans", sans-serif;
     font-size: 45px;
@@ -32,19 +32,19 @@
     margin-bottom: 0;
     margin: 33px 0px 0px;
   }
-  #login-form .ant-form-item-label > label.ant-form-item-required::before {
+  #registerUser .ant-form-item-label > label.ant-form-item-required::before {
     display: none;
   }
   .ant-form-item-control-input-content {
     text-align: left;
   }
-  #login-form .ant-input-affix-wrapper {
+  #registerUser .ant-input-affix-wrapper {
     padding: 12px 15px;
   }
-  #login-form_username {
+  #registerUser_username {
     height: 48px;
   }
-  #login-form .ant-btn {
+  #registerUser .ant-btn {
     height: 42px;
     letter-spacing: 1px;
     border-radius: 6px;

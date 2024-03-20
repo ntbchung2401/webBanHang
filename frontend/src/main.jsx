@@ -10,7 +10,6 @@ import router from "./routers/Router";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL_API;
 axios.defaults.baseURL = BASE_URL;
-console.log(axios.defaults.baseURL);
 
 const queryClient = new QueryClient();
 

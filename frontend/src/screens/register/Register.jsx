@@ -1,23 +1,77 @@
-import { Button, Form, Input } from "antd";
-import "./Register.css";
-import { Link } from "react-router-dom";
-
+import { useState } from "react";
+import { Alert, Button, Form, Input } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { openNotificationWithIcon } from "../../components/notification/notification";
+import { registerUserAPI } from "../../api/apiUrl";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [showAlert, setShowAlert] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  const handleSuccessfulRegistration = () => {
+    openNotificationWithIcon("success", "Registration Successful");
+    setShowAlert(true);
+    navigate("/login"); // Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
+  };
+
+  const handleFailedRegistration = () => {
+    openNotificationWithIcon("error", "Registration Failed");
+    setShowError(true);
+  };
+
+  const onFinish = async (values) => {
+    try {
+      const response = await registerUserAPI(values);
+      console.log("Response:", response);
+      if (response.status === 200 || response.status === 201) {
+        handleSuccessfulRegistration();
+      } else {
+        handleFailedRegistration();
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      handleFailedRegistration();
+    }
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
   return (
     <div className="login__container">
       <div className="login">
         <Form
           name="login-form"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
         >
+          {showAlert && (
+            <Alert
+              message="Registration Successful"
+              type="success"
+              showIcon
+              onClose={() => setShowAlert(false)}
+            />
+          )}
+          {showError && (
+            <Alert
+              message="Registration Failed"
+              type="error"
+              showIcon
+              onClose={() => setShowError(false)}
+            />
+          )}
           <p className="form-title">Welcome</p>
           <p className="welcome">
             {" "}
-            Enter your email and password and confirm password to register new account.
+            Enter your email and password and confirm password to register new
+            account.
           </p>
           <p className="title">Email</p>
           <Form.Item
-            name="username"
+            name="email"
             rules={[
               {
                 required: true,
@@ -42,14 +96,24 @@ const Register = () => {
           <p className="title">Confirm Password</p>
           <Form.Item
             name="confirmPassword"
+            dependencies={['password']}
+            hasFeedback
             rules={[
               {
                 required: true,
                 message: "Please input right password!",
               },
+              ({getFieldValue}) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject('The two passwords that you entered do not match!');
+                },
+              }),
             ]}
           >
-            <Input.Password placeholder="Enter your Password" />
+            <Input.Password placeholder="Confirm your Password" />
           </Form.Item>
           <Form.Item>
             <Button
@@ -62,7 +126,8 @@ const Register = () => {
           </Form.Item>
           <p className="welcome">
             {" "}
-            If you have account,<Link to="/login">Click here</Link> to login.
+            If you have an account,{" "}
+            <Link to="/login">Click here</Link> to login.
           </p>
         </Form>
       </div>
